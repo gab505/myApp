@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import {firebase, db} from "./utils/firebase";
 
-import Login from "./components/Login";
 import SignUp from "./components/SignUp"
 
 
@@ -15,7 +14,9 @@ class App extends Component {
     this.state = {
       signUpOpen: false,
       loginError: undefined,
-      user: undefined
+      user: undefined,
+      email: "",
+      password: ""
     }
 
     
@@ -25,8 +26,10 @@ class App extends Component {
       }
     });
 
-    this.toggleSignup = this.toggleSignUp.bind(this);
+    this.toggleSignUp = this.toggleSignUp.bind(this);
     this.tryLogin = this.tryLogin.bind(this);
+    this.submit = this.submit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   toggleSignUp(){
@@ -46,25 +49,56 @@ class App extends Component {
       })
   }
 
-  
+  submit(username, email, password){
+        
 
-  signUp(username, email, password){
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+        .catch(function(error) {
 
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          console.error(errorMessage);
+                    
+        });
   }
-
+  handleChange(ev) {
+    ev.preventDefault();
+    this.setState({
+      [ev.target.name] : ev.target.value
+    })
+  }
+  
   render() {
-    const {signUpOpen, loginError, user} = this.state;
+    const {signUpOpen, loginError, user, email, password} = this.state;
     return (
       <div className="App">
-        { <Login loginError={loginError} 
-                    tryLogin={this.tryLogin}/>
-        }
-        { signUpOpen && 
-          <SignUp toggleSignUp={this.toggleSignup}
-                  trySignUp={this.trySignup}
-                  />
-        }
-      </div>
+        
+        <div className="box">
+              <h1>KS Planner</h1>
+              <input type="email" name="email" placeholder="email" value={email}
+                        onChange={this.handleChange}
+              />
+              <input type="password" name="password" placeholder="password" value={password} 
+                        onChange={this.handleChange}
+              />
+              <button onClick={() => this.tryLogin(email, password)}>LOGIN</button>
+                    
+                    
+              <div className="error">{loginError}</div>
+              <button className="signupBtn" onClick={this.toggleSignUp}>
+                SIGN UP
+              </button>
+              
+ 
+        </div>
+        <div className="Toggle">
+          
+          { signUpOpen && <SignUp submit={this.submit} toggleSignUp={this.toggleSignUp}/>
+          }
+        </div>
+        
+       </div> 
+       
     );
   }
 }

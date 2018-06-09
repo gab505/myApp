@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {firebase, db} from "./utils/firebase";
+import './SignUp.css';
 
 export default class SignUp extends Component {
     constructor(props) {
@@ -12,41 +12,27 @@ export default class SignUp extends Component {
         }
     }
 
-    submit(){
-            const {username, email, password} = this.state;
-
-            firebase.auth().doCreateUserWithEmailAndPassword(email, password)
-                .then(authUser => {
-                    this.setState(() => ({ ...INITIAL_STATE }));
-                    history.push(routes.HOME);
-                })
-                .catch(error => {
-                    this.setState('error', error);
-                });
-    }
+    
 
     render(){
-        const {toggleSignUp} = this.props;
+        const {submit, toggleSignUp} = this.props;
         const {username, email, password} = this.state;
 
+        
         return (
             <div className="SignUp">
-                <input value={username}
-                onChange={event => this.setState('username, event.target.value')}
-                type="text"
-                placeholder="User Name"
+                <h1>Sign Up</h1>
+                <input type="username" placeholder="username" value={username}
+                onChange={event => this.setState({username: event.target.value})}
                 />
-                <input value={email}
-                onChange={event => this.setState('email, event.target.value')}
-                type="text"
-                placeholder="Email"
+                <input type="email" placeholder="email" value={email}
+                onChange={event => this.setState({email: event.target.value})}
                 />
-                <input value={password}
-                onChange={event => this.setState('password, event.target.value')}
-                type="text"
-                placeholder="Password"
+                <input type="password" placeholder="password" value={password}
+                onChange={event => this.setState({password: event.target.value})}
                 />
                 <button onClick={() => submit(username, email, password)}>Create Account</button>
+                <button onClick={toggleSignUp}>Back to Login</button>
             </div>
         )
     }
