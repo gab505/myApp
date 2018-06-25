@@ -1,21 +1,19 @@
 import React, {Component} from 'react';
+import './Task.css';
 
 
 
 export default class Task extends Component {
     constructor(props){
         super(props);
-        this.state = {
-            dtime : new Date().toLocaleString(),
-            dhour : this.time.getHours(),
-            dminute: this.time.getMinutes(),
-        }
     }
 
     render(){
         return (
-            <div>
-                hi
+            <div className="Task">
+                <p>Task</p>
+                <p>{this.props.name}</p>
+                <p>{this.props.dueDate}</p>
             </div>
         )
     }
